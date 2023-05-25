@@ -30,7 +30,7 @@ def login():
     form_login = formLogin()
     form_novo_usuario = formNovoUsuario()
     
-    return render_template('loginObjeto.html',titulo=titulo,descricao=descricao,foem_login=form_login,form_novo_usuario=form_novo_usuario)
+    return render_template('loginObjeto.html',titulo=titulo,descricao=descricao,form_login=form_login,form_novo_usuario=form_novo_usuario)
 
 if __name__ == '__main__':
     app.run(debug=True)

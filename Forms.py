@@ -12,7 +12,7 @@ class formNovoUsuario(FlaskForm):
     nome    = StringField('Nome', validators=[DataRequired()])
     enail   = StringField('Email', validators=[DataRequired(),Email()])
     celular = StringField('Celular', validators=[])
-    cpf     = StringField('CPF', validatrs=[])
+    cpf     = StringField('CPF', validators=[])
     senha   = PasswordField('Senha',validators=[DataRequired(),Length(6, 12)])
     senhaConfirmação = PasswordField('Confirmação de Senha', validators=[DataRequired(),EqualTo('senha')])
     submit  = SubmitField('Criar Conta')

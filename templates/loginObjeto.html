@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block banner %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <h1 class="mt-4 ps-2 fs-2">formulario de login</h1>
+</div>
+
+<div class="row mt-3">
+    <div class="col">
+        <form method="POST" action="" class="border p-5">
+            {{ form_login.csrf_token }}
+            <legend>login</legend>
+            <fieldset>
+                <div class="form-group mb-2">
+                    {{ form_login.email.label (class="form-control-label") }}
+                    {{ form_login.email (class="form-control") }}
+                </div>
+                <div class="form-group mb-2">
+                    {{ form_login.senha.label (class="from-control-label") }}
+                    {{ form_login.senha (class="form-control") }}
+                </div>
+            </fieldset>
+            {{ form_login.submitLogin (class="btn btn-primary mt-2") }}
+        </form>
+    </div>
+
+    <div class="col">
+        <form method="POST" action="">
+            {{ form_novo_usuario.csrf_token }}
+            <legend>login</legend>
+            <fieldset>
+                <div class="form-group mb-2">
+                    {{ form_nono_usuario.nome.label (class="form-control-label") }}
+                    {{ form_novo_usuario.nome (class="form-control") }}
+                </div>
+                <div class="form-group mb-2">
+                    {{ form_nono_usuario.email.label (class="form-control-label") }}
+                    {{ form_novo_usuario.email (class="form-control") }}
+                </div>
+                <div class="form-group mb-2">
+                    {{ form_nono_usuario.celular.label (class="form-control-label") }}
+                    {{ form_novo_usuario.celular (class="form-control") }}
+                </div>
+                <div class="form-group mb-2">
+                    {{ form_nono_usuario.cpf.label (class="form-control-label") }}
+                    {{ form_novo_usuario.cpf (class="form-control") }}
+                </div>
+                <div class="form-group mb-2">
+                    {{ form_nono_usuario.senha.label (class="form-control-label") }}
+                    {{ form_novo_usuario.senha (class="form-control") }}
+                </div>
+
+        </form>
+    </div>
+    
+</div>
+
+{% endblock %}
