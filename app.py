@@ -9,9 +9,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'f03e83daa6c1bf312ffee9e3b8bc44743641579bad3aec5fd96d7d325485c184'
 
 mydb = mysql.connector.connect(
-    host = 'localhost',
-    user = 'root',
-    password = 'pw2010@@',
+    host = 'db-mysql-nyc1-97096-do-user-14262463-0.b.db.ondigitalocean.com',
+    port = '25060',
+    user = 'doadmin',
+    password = 'AVNS_8umiTzBdZHI7b5re2wz',
     database = 'ead_senac',
 )
 
