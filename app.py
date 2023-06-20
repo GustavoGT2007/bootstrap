@@ -1,52 +1,82 @@
 import mysql.connector
-from flask import Flask, render_template, request, url_for, flash, redirect
-from Forms import formLogin, formNovoUsuario
+from flask import Flask, render_template, request, url_for, flash, redirect, session
+from forms import formLogin, formNovoUsuario
 from hashlib import sha256
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = '75f50e1c633458f6ef35fdf85df89098'
+
+app.config['SECRET_KEY'] = 'f03e83daa6c1bf312ffee9e3b8bc44743641579bad3aec5fd96d7d325485c184'
 
 mydb = mysql.connector.connect(
     host = 'localhost',
     user = 'root',
-    password = 'P@$$w0rd',
-    database = 'senac_ead',
+    password = 'pw2010@@',
+    database = 'ead_senac',
 )
+
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    title="Curso a EAD Senac"
+    return render_template('index.html',title=title)
+
 
 @app.route('/cursos')
 def cursos():
-    return render_template('cursos.html')
+    
+    my_cursor = mydb.cursor()
+    my_cursor.execute('select * from cursos')
+
+    cursos = my_cursor.fetchall()
+
+
+    return render_template('curso.html',cursos=cursos)
+
 
 @app.route('/contato')
 def contato():
     return render_template('contato.html')
 
-@app.route('/ead')
+
+@app.route('/curso_a_distancia')
 def ead():
-    return render_template('ead.html')
+    return render_template('sobreEAD.html')
 
 
 @app.route('/login', methods=['get','post'])
 def login():
-    titulo = 'Login formulario de login'
-    descricao = 'Formulario formulario de login'
+    titulo = 'Login de Acesso'
+    descricao = 'Formulário formulário de login'
     
     form_login = formLogin()
     form_novo_usuario = formNovoUsuario()
-    
-    if  form_login.validate_on_submit() and 'submitLogin' in request.form:
-    
-        flash(f'Login realizado com sucesso: {form_login.email.data}', 'alrt-success')
-        return redirect(url_for('index'))
+
+    if form_login.validate_on_submit() and 'submitLogin' in request.form:
+        
+        cursor = mydb.cursor()
+
+        email = form_login.email.data
+        senha = form_login.senha.data
+        hashSenha = sha256(senha.encode())
+
+        comando = f'Select * from alunos where email = "{email}" '
+        cursor.execute(comando)
+        result = cursor.fetchall()
+
+        if hashSenha.hexdigest() ==  result[0][5] :
+            session['nome_usuario'] = result[0][1]
+            flash(f'Login realizado com sucesso: {form_login.email.data}', 'alert-primary')
+            return redirect(url_for('index'))
+        else:
+            flash(f'Usuario ou senha incorreta para: {form_login.email.data}', 'alert-danger')
+            return redirect(url_for('login'))    
+        
+
 
     if form_novo_usuario.validate_on_submit() and 'submitCadastro' in request.form:
-        
-        cursos = mydb.cursor()
+
+        cursor = mydb.cursor()
 
         nome     = form_novo_usuario.nome.data
         telefone = form_novo_usuario.celular.data
@@ -56,13 +86,21 @@ def login():
         hashSenha = sha256(senha.encode())
         
         query = f'INSERT INTO alunos (nome,email,celular,documento,senha) VALUES ("{nome}","{email}","{telefone}","{cpf}","{hashSenha.hexdigest()}")'
+        print(query)
         cursor.execute(query)
         mydb.commit()
 
         flash(f'Cadastro realizado com sucesso: {form_novo_usuario.nome.data}' , 'alert-success')
         return redirect(url_for('index'))
+
     
-        return render_template('loginObjeto.html',titulo=titulo,descricao=descricao,form_login=form_login,form_novo_usuario=form_novo_usuario)
+    return render_template('loginObjeto.html',titulo=titulo,descricao=descricao,form_login=form_login,form_novo_usuario=form_novo_usuario)
+
+@app.route('/logOut')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
